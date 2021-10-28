@@ -8,11 +8,11 @@ import java.util.Map;
 public class GenericAPIClient<R,D> implements APIClient<R,D>{
 
 
-    WebClient webClient;
-
-    public GenericAPIClient(){
-        //WebClient.builder().
-    }
+//    WebClient webClient;
+//
+//    public GenericAPIClient(){
+//        //WebClient.builder().
+//    }
 
 
 

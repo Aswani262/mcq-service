@@ -4,4 +4,5 @@ public class AuditProperties {
     private String createdBy;
     private String lastUpdatedBy;
 
+
 }

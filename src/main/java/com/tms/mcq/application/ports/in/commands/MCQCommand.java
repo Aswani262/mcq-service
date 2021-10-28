@@ -4,4 +4,5 @@ import com.tms.mcq.framework.commandhandling.Command;
 import com.tms.mcq.framework.commandhandling.Headers;
 
 public class MCQCommand extends Command {
+
 }
