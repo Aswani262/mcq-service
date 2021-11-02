@@ -1,20 +1,27 @@
-package com.tms.mcq.application.services.cmd;
+package com.tms.mcq.application.services;
 
-import com.tms.mcq.application.ports.in.AddNewMCQUseCase;
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetMasterData;
 import com.tms.mcq.application.ports.in.InitNewQuestionCreationUseCase;
 import com.tms.mcq.application.ports.in.commands.InitNewMCQCmd;
-import com.tms.mcq.application.ports.out.SequenceService;
 import com.tms.mcq.application.ports.out.MCQRepository;
 import com.tms.mcq.domain.model.MCQ;
 import com.tms.mcq.domain.model.MCQFactory;
 import com.tms.mcq.domain.services.GenerateUniqueId;
 import com.tms.mcq.framework.annotation.UseCaseService;
 import com.tms.mcq.framework.annotation.CommandHandler;
+import com.tms.mcq.framework.commandhandling.CommandGateway;
+import com.tms.mcq.framework.commandhandling.CommandResult;
 import com.tms.mcq.framework.dto.ServiceResult;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tms.mcq.framework.eventhandling.EventGateway;
+import com.tms.mcq.framework.utils.MessageCode;
+import com.tms.mcq.framework.utils.ResponseKey;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @UseCaseService //or application service
+@Log4j2
 public class InitMCQService implements InitNewQuestionCreationUseCase {
 
     //Some thought on master data -
@@ -29,30 +36,49 @@ public class InitMCQService implements InitNewQuestionCreationUseCase {
 
     MCQRepository mcqRepository;
     GenerateUniqueId generateUniqueId;
+    EventGateway eventGateway;
+    CommandGateway commandGateway;
 
-    public InitMCQService(MCQRepository mcqRepository,GenerateUniqueId generateUniqueId){
+    public InitMCQService(MCQRepository mcqRepository,GenerateUniqueId generateUniqueId,EventGateway eventGateway,CommandGateway commandGateway){
         this.mcqRepository = mcqRepository;
         this.generateUniqueId = generateUniqueId;
+        this.eventGateway = eventGateway;
+        this.commandGateway = commandGateway;
     }
-
+    // Write an aop to log all the exception and convert into MCQ Exception
     /**
-     * It will assign a new MCQId to question and status = "Inisiated";
+     * It will assign a insisiate new MCQ creation in system
+     * It will throw runtime MCQInitException
      * @param cmd
      * @return
      */
     @Override
     @Transactional
+    @CommandHandler
     public ServiceResult init(InitNewMCQCmd cmd) {
         ServiceResult result = new ServiceResult();
-        try {
-            String mcqId = generateUniqueId.generateMCQId(cmd.getOrgCode(), cmd.getSubjectId());
-            MCQ mcq = MCQFactory.from(cmd, mcqId);
-            mcqRepository.store(mcq);
-            result.addData("mcqId", mcqId);
-            result.addData("message", "MCQ Question created");
-        } catch (Throwable th){
-            result.addError("1223","unable to create mcq");
-        }
+
+        validate(cmd);
+        String mcqId = generateUniqueId.generateMCQId(cmd.getSubjectId());
+        MCQ mcq = MCQFactory.from(cmd, mcqId);
+        mcqRepository.store(mcq);
+
+        result.addData(ResponseKey.mcqId, mcqId);
+        result.addData(ResponseKey.message, MessageCode.MCQ_10003);
+
+        eventGateway.publish(mcq.getEvents());
+
         return result;
     }
+
+    private void validate(InitNewMCQCmd cmd) {
+
+        GetMasterData getMasterData = new GetMasterData();
+        getMasterData.setSubjectCode(cmd.getSubjectId());
+
+        CommandResult commandResult = commandGateway.sendAndReceive(getMasterData);
+
+
+    }
+
 }

@@ -7,5 +7,10 @@ package com.tms.mcq.application.ports.out;
 // Will decide later
 // In case of implementing use
 public interface SequenceService {
-    String getNextSequence(String entityName);
+    /**
+     * Get next sequence for a subject , using subject code
+     * @param subjectCode
+     * @return next sequence
+     */
+    Long getNextSequence(String subjectCode);
 }

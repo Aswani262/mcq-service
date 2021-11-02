@@ -1,14 +1,16 @@
 package com.tms.mcq.domain.model;
 
-import com.tms.mcq.domain.events.MCQInisited;
+import com.tms.mcq.domain.events.MCQInitiated;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.List;
 import java.util.Set;
 
 @Getter
 @NoArgsConstructor
-@Setter(AccessLevel.PACKAGE)
+@Setter(AccessLevel.PROTECTED)//No one able to access setter to change the property
 public class MCQ extends AggregatesRoot  {
     private String mcqId;
     private String questionText;
@@ -19,7 +21,6 @@ public class MCQ extends AggregatesRoot  {
     private String subjectId;
     private Set<String> labelId;
 
-    //Also used by spring data jpa , so dont put any kind of validation logic here
     public MCQ(String mcqId,String questionText,List<Option> options,List<Hints> hints,Set<Integer> yearsInAsked,Set<String> topicIds,String subjectId,Set<String> labelId){
         this.mcqId= mcqId;
         this.questionText = questionText;
@@ -29,7 +30,5 @@ public class MCQ extends AggregatesRoot  {
         this.topicIds = topicIds;
         this.subjectId = subjectId;
         this.labelId = labelId;
-        addEvent(new MCQInisited());
     }
-
 }

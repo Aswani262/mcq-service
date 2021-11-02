@@ -16,12 +16,12 @@ import java.util.*;
 
 @Component
 @Getter
-public class EventRegistry {
+public class LocalEventRegistry {
 
     Map<Class<?>, List<Map<String,String>>> providerMap = new HashMap<>();
 
     @Autowired
-    public EventRegistry(ApplicationContext applicationContext){
+    public LocalEventRegistry(ApplicationContext applicationContext){
         Reflections reflections = new Reflections(new ConfigurationBuilder().forPackages("com.tms.mcq").addScanners(Scanners.MethodsAnnotated));
         Set<Method> methodSet = reflections.getMethodsAnnotatedWith(EventHandler.class);
 

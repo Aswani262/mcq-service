@@ -1,23 +1,21 @@
 package com.tms.mcq.framework.eventhandling;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
-public class LocalEventGateway implements EventGateway {
 
+public class LocalEventGateway implements EventGateway {
    public ProducerTemplate producerTemplate;
 
-   private EventRegistry eventRegistry;
-
-   public LocalEventGateway(ProducerTemplate producerTemplate,EventRegistry eventRegistry){
+   public LocalEventGateway(ProducerTemplate producerTemplate){
        this.producerTemplate = producerTemplate;
-       this.eventRegistry = eventRegistry;
    }
 
     @Override

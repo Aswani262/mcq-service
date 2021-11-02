@@ -1,15 +1,10 @@
 package com.tms.mcq.adaptors.out.outboundservice.masterdata.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class Topic {
+    private String code;//This is primary key
     private String name;
-    private String description;
 }

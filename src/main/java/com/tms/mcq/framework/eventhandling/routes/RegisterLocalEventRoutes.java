@@ -1,6 +1,6 @@
 package com.tms.mcq.framework.eventhandling.routes;
 
-import com.tms.mcq.framework.eventhandling.EventRegistry;
+import com.tms.mcq.framework.eventhandling.LocalEventRegistry;
 import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.commons.lang3.StringUtils;
@@ -15,28 +15,30 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class RegisterEventRoutes implements ApplicationContextAware {
+public class RegisterLocalEventRoutes implements ApplicationContextAware {
 
     @Autowired
     CamelContext camelContext;
 
     @Autowired
-    EventRegistry eventRegistry;
+    LocalEventRegistry eventRegistry;
 
+   // final String kafkaEventTopic= "mcq-cmd-domain-event";//get list of interested topic its want to listen
 
     @SneakyThrows
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
         for(Map.Entry<Class<?>, List<Map<String,String>>> handler:eventRegistry.getProviderMap().entrySet()){
+
             String eventName = handler.getKey().getSimpleName();
-            List<String> listOfRecepted = new ArrayList<>();
-            for(Map<String,String> beanAndMethodName:handler.getValue()){
-                String to = "bean:"+beanAndMethodName.get("beanName")+"?method="+beanAndMethodName.get("methodName");
-                listOfRecepted.add(to);
+            ArrayList<String> receptentList= new ArrayList<>();
+            for(Map<String,String> beanAndMethod :handler.getValue()){
+                String receptent = "bean:"+beanAndMethod.get("beanName")+"?method="+beanAndMethod.get("methodName");
+                receptentList.add(receptent);
             }
-            String listOfRecep  = StringUtils.join(listOfRecepted,",");
-            camelContext.addRoutes(new EventsRoutes(eventName,listOfRecep);
+            String receptedListAsString = StringUtils.join(receptentList,",");
+            camelContext.addRoutes(new LocalEventRoutes(eventName,receptedListAsString,handler.getKey()));
         }
     }
 }

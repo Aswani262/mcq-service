@@ -1,25 +1,25 @@
 package com.tms.mcq.framework.dto;
 
+import com.tms.mcq.framework.utils.ResponseKey;
+import com.tms.mcq.framework.exception.*;
+import com.tms.mcq.framework.utils.MessageCode;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 public class ServiceResult {
-    private Map<String,HashMap<String,Object>> result;
+    private Map<String,Object> data = new HashMap<>();
+    private Map<String,Object> errors = new HashMap<>();
 
-    public ServiceResult(){
-        result = new HashMap<>(2);
-        result.put("data",new HashMap<String,Object>());
-        result.put("error",new HashMap<String,Object>());
+    public void addData(ResponseKey key,Object data){
+        this.data.put(key.toString(),data);
     }
 
-    public void addData(String key,Object data){
-        result.get("data").put(key,data);
-    }
-
-    public void addError(String code,String message){
-        result.get("error").put(code,message);
+    public void addError(ErrorCode code,String message){
+        this.errors.put(code.toString(),message);
     }
 }

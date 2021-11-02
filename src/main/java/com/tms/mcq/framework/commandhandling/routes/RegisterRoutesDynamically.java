@@ -21,7 +21,6 @@ public class RegisterRoutesDynamically implements ApplicationContextAware {
     @Autowired
     CamelContext camelContext;
 
-
     @SneakyThrows
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -29,6 +28,5 @@ public class RegisterRoutesDynamically implements ApplicationContextAware {
             Map<String,String> beanAndMethod = handler.getValue();
             camelContext.addRoutes(new CommandRoutes(camelContext,handler.getKey().getSimpleName(),beanAndMethod.get("beanName"),beanAndMethod.get("methodName")));
         }
-
     }
 }

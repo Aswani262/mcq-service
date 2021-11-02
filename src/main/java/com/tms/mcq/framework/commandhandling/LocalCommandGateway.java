@@ -2,21 +2,20 @@ package com.tms.mcq.framework.commandhandling;
 
 import com.tms.mcq.framework.annotation.InfraService;
 import com.tms.mcq.framework.dto.ServiceResult;
+import com.tms.mcq.framework.exception.ErrorCode;
+import lombok.extern.log4j.Log4j2;
 import org.apache.camel.ProducerTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @InfraService
+@Log4j2
 public class LocalCommandGateway implements CommandGateway {
 
     ProducerTemplate producerTemplate;
 
-
-
-    public LocalCommandGateway(ProducerTemplate template, CommandRegistry registry){
+    public LocalCommandGateway(ProducerTemplate template){
         this.producerTemplate = template;
     }
 
@@ -24,26 +23,24 @@ public class LocalCommandGateway implements CommandGateway {
     public CompletableFuture<CommandResult> sendAndReceiveAsync(Command command){
         return producerTemplate.asyncRequestBodyAndHeaders("seda:"+command.getClass().getSimpleName(),command,command.getHeaders(), ServiceResult.class).thenApply(result -> {
             CommandResult cmdResult = new CommandResult();
-            cmdResult.addResult(result.getResult());
+            cmdResult.setData(result.getData());
+            cmdResult.setErrors(result.getErrors());
             return cmdResult;
         });
-
     }
 
     @Override
     public CommandResult sendAndReceive(Command command) {
-         CommandResult commandResult = new CommandResult();
-
+        CommandResult commandResult = new CommandResult();
         try {
             commandResult =  producerTemplate.asyncRequestBodyAndHeaders("seda:"+command.getClass().getSimpleName(), command, command.getHeaders(), ServiceResult.class).thenApply(result -> {
                 CommandResult cmdResult = new CommandResult();
-                cmdResult.addResult(result.getResult());
+                cmdResult.setData(result.getData());
+                cmdResult.setErrors(result.getErrors());
                 return cmdResult;
             }).get();
-        } catch (InterruptedException e) {
-            commandResult.addResult(new HashMap<>());
-        } catch (ExecutionException e) {
-            commandResult.addResult(new HashMap<>());
+        } catch (InterruptedException | ExecutionException  e) {
+            //commandResult.addError(ErrorCode.CMD_10001, "Error while exceuting command");
         }
         return commandResult;
     }

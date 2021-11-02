@@ -1,12 +1,11 @@
-package com.tms.mcq.application.services.cmd;
+package com.tms.mcq.application.services;
 
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetMasterData;
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetSubjectById;
 import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.MasterData;
-import com.tms.mcq.adaptors.out.outboundservice.masterdata.query.GetMasterData;
 import com.tms.mcq.application.ports.in.AddNewMCQUseCase;
 import com.tms.mcq.application.ports.in.commands.AddNewMCQCmd;
 import com.tms.mcq.application.ports.out.MCQRepository;
-import com.tms.mcq.domain.model.MCQ;
-import com.tms.mcq.domain.model.MCQFactory;
 import com.tms.mcq.framework.annotation.UseCaseService;
 import com.tms.mcq.framework.commandhandling.CommandGateway;
 import com.tms.mcq.framework.annotation.CommandHandler;
@@ -15,7 +14,6 @@ import com.tms.mcq.framework.dto.ServiceResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @UseCaseService
 public class AddNewMCQService implements AddNewMCQUseCase {
@@ -31,7 +29,6 @@ public class AddNewMCQService implements AddNewMCQUseCase {
 
     @CommandHandler
     public ServiceResult addNewMCQ(AddNewMCQCmd cmd){
-
         ServiceResult serviceResult = new ServiceResult();
         return serviceResult;
     }
@@ -45,7 +42,7 @@ public class AddNewMCQService implements AddNewMCQUseCase {
 
         commandResult = commandGateway.sendAndReceive(getMCQMasterData);
 
-        MasterData masterData = (MasterData)commandResult.getData("masterData");
+        MasterData masterData = (MasterData)commandResult.getData().get("masterData");
         boolean isTopicIdFound = masterData.getTopics().stream().anyMatch(topic -> topic.getName().equals(cmd.getTopicId()));
         boolean isSubjectFound = masterData.getSubject().stream().anyMatch(subject -> subject.getName().equals(cmd.getSubjectId()));
 

@@ -1,4 +1,4 @@
-package com.tms.mcq.adaptors.in.restapi.cmd;
+package com.tms.mcq.adaptors.in.restapi;
 
 import com.tms.mcq.application.ports.in.commands.AddNewMCQCmd;
 import com.tms.mcq.framework.dto.RestResponse;

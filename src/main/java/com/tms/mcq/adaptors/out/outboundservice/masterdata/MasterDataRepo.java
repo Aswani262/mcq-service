@@ -1,17 +1,40 @@
 package com.tms.mcq.adaptors.out.outboundservice.masterdata;
 
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetMasterData;
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetSubjectById;
 import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.MasterData;
-import com.tms.mcq.adaptors.out.outboundservice.masterdata.query.GetMasterData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.Subject;
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.Topic;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Repository
 public class MasterDataRepo {
 //    @Autowired
 //    WebClient webClient;
-    public MasterData findMasterData(GetMasterData query) {
-        return new MasterData();
+
+
+
+    public MasterData findAllMasterData() {
+        Topic topic = new Topic();
+        topic.setCode("ASHW");
+
+        Set<Topic> topics = new HashSet<>();
+        topics.add(topic);
+
+        Subject subject = new Subject();
+        subject.setCode("TIWA");
+
+        Set<Subject> subjects = new HashSet<>();
+        subjects.add(subject);
+
+        MasterData masterData = new MasterData();
+        masterData.setSubject(subjects);
+        masterData.setTopics(topics);
+
+        return masterData;
     }
 }

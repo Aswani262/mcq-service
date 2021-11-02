@@ -1,11 +1,8 @@
 package com.tms.mcq.framework.commandhandling.routes;
 
 import com.tms.mcq.framework.exception.TMSException;
-import lombok.AllArgsConstructor;
 import org.apache.camel.CamelContext;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.builder.RouteBuilder;
-import org.springframework.context.annotation.Configuration;
 
 
 public class CommandRoutes extends RouteBuilder {
@@ -27,9 +24,9 @@ public class CommandRoutes extends RouteBuilder {
     public void configure() throws Exception {
 
         onException(TMSException.class)
-                .onWhen(exchange -> ((TMSException)exchange.getException()).isRecoverable())
+                .onWhen(exchange -> ((TMSException)exchange.getMessage()).isRecoverable())
                         .maximumRedeliveries(3)
-                                .redeliveryDelay(1000).to("seda:mcq-cmd-dead-letter").setExchangePattern(ExchangePattern.InOnly);
+                                .redeliveryDelay(10000);//.to("seda:mcq-cmd-dead-letter").setExchangePattern(ExchangePattern.InOnly);
 
         from("seda:"+ sedaName).routeId(sedaName+"-"+"route")
                 .tracing().

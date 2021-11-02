@@ -1,7 +1,8 @@
-package com.tms.mcq.adaptors.in.restapi.cmd;
+package com.tms.mcq.adaptors.in.restapi;
 
 import com.tms.mcq.application.ports.in.commands.InitNewMCQCmd;
 import com.tms.mcq.framework.commandhandling.CommandGateway;
+import com.tms.mcq.framework.commandhandling.CommandResult;
 import com.tms.mcq.framework.dto.RestResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,9 @@ public class InitMCQController {
     }
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<RestResponse>> initMCQ(@RequestBody Map<String,Object> req){
+    public CompletableFuture<ResponseEntity<CommandResult>> initMCQ(@RequestBody Map<String,Object> req){
         InitNewMCQCmd cmd = InitNewMCQCmd.from(req);
-        return commandGateway.sendAndReceiveAsync(cmd).thenApplyAsync(cmdResult -> new ResponseEntity<>(new RestResponse(cmdResult), HttpStatus.ACCEPTED));
+        return commandGateway.sendAndReceiveAsync(cmd).thenApplyAsync(cmdResult -> new ResponseEntity<>(cmdResult, HttpStatus.ACCEPTED));
     }
 
 }
