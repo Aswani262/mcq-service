@@ -13,8 +13,7 @@ public class AddNewMCQCmd extends MCQCommand {
     private String mcqId;
     private String questionText;
     private List<Option> options;
-    private String subjectId;
-    private String topicId;
+    private List<String> topicId;
     private List<String> hints;
     private List<Integer> yearInAsked;
 

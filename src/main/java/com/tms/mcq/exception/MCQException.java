@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 public class MCQException extends TMSException {
 
-    protected MCQException(String message){
+    public MCQException(MCQErrorCode code,String message,String causeInfo){
         super(message);
+        setCode(code);
+        setCauseInfo(causeInfo);
     }
 }

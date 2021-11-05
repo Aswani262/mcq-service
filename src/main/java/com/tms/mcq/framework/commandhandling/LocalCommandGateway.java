@@ -40,7 +40,6 @@ public class LocalCommandGateway implements CommandGateway {
                 return cmdResult;
             }).get();
         } catch (InterruptedException | ExecutionException  e) {
-            //commandResult.addError(ErrorCode.CMD_10001, "Error while exceuting command");
         }
         return commandResult;
     }

@@ -9,6 +9,8 @@ import com.tms.mcq.framework.utils.MessageCode;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public class MCQRepositoryImpl implements MCQRepository {
@@ -23,12 +25,12 @@ public class MCQRepositoryImpl implements MCQRepository {
 
     @Override
     public void store(MCQ mcq) {
-        try {
-            mongoTemplate.save(mcq, table_name);
-        } catch (Throwable throwable){
-
-        }
+        mongoTemplate.save(mcq, table_name);
     }
 
-
+    @Override
+    public Optional<MCQ> findById(String mcqId) {
+      Optional<MCQ> mcq =  Optional.of(mongoTemplate.findById(mcqId,MCQ.class,table_name));
+      return mcq;
+    }
 }

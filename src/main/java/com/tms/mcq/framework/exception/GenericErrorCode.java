@@ -1,4 +1,5 @@
 package com.tms.mcq.framework.exception;
 
-public class GenericErrorCode implements ErrorCode{
+public enum GenericErrorCode implements ErrorCode {
+    GEN_10001,
 }

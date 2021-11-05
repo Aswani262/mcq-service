@@ -1,12 +1,15 @@
 package com.tms.mcq.application.services;
 
 import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetMasterData;
+import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.MasterData;
 import com.tms.mcq.application.ports.in.InitNewQuestionCreationUseCase;
 import com.tms.mcq.application.ports.in.commands.InitNewMCQCmd;
 import com.tms.mcq.application.ports.out.MCQRepository;
 import com.tms.mcq.domain.model.MCQ;
 import com.tms.mcq.domain.model.MCQFactory;
 import com.tms.mcq.domain.services.GenerateUniqueId;
+import com.tms.mcq.exception.MCQErrorCode;
+import com.tms.mcq.exception.MCQException;
 import com.tms.mcq.framework.annotation.UseCaseService;
 import com.tms.mcq.framework.annotation.CommandHandler;
 import com.tms.mcq.framework.commandhandling.CommandGateway;
@@ -15,6 +18,7 @@ import com.tms.mcq.framework.dto.ServiceResult;
 import com.tms.mcq.framework.eventhandling.EventGateway;
 import com.tms.mcq.framework.utils.MessageCode;
 import com.tms.mcq.framework.utils.ResponseKey;
+import com.tms.mcq.framework.utils.ServiceUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,28 +61,30 @@ public class InitMCQService implements InitNewQuestionCreationUseCase {
     @CommandHandler
     public ServiceResult init(InitNewMCQCmd cmd) {
         ServiceResult result = new ServiceResult();
-
-        validate(cmd);
-        String mcqId = generateUniqueId.generateMCQId(cmd.getSubjectId());
-        MCQ mcq = MCQFactory.from(cmd, mcqId);
-        mcqRepository.store(mcq);
-
-        result.addData(ResponseKey.mcqId, mcqId);
-        result.addData(ResponseKey.message, MessageCode.MCQ_10003);
-
-        eventGateway.publish(mcq.getEvents());
-
+        try {
+            validate(cmd);
+            String mcqId = generateUniqueId.generateMCQId(cmd.getSubjectId());
+            MCQ mcq = MCQFactory.from(cmd, mcqId);
+            mcqRepository.store(mcq);
+            result.addData(ResponseKey.mcqId, mcqId);
+            result.addData(ResponseKey.message, MessageCode.MCQ_10003);
+            eventGateway.publish(mcq.getEvents());
+        } catch (Throwable throwable){// TODO: Use aop to handle exception - at time of handling log request and response
+            ServiceUtils.handleException(throwable);
+        }
         return result;
     }
 
     private void validate(InitNewMCQCmd cmd) {
-
         GetMasterData getMasterData = new GetMasterData();
         getMasterData.setSubjectCode(cmd.getSubjectId());
 
         CommandResult commandResult = commandGateway.sendAndReceive(getMasterData);
+        MasterData masterData = (MasterData)commandResult.getData().get("masterData");
 
-
+        if(!masterData.getSubject().contains(cmd.getSubjectId())){
+           throw new MCQException(MCQErrorCode.MCQ_10002,"Invalid subject code","Subject code not exist in system");
+        }
     }
 
 }

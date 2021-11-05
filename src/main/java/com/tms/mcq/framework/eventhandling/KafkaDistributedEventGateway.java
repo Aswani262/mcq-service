@@ -1,11 +1,13 @@
 package com.tms.mcq.framework.eventhandling;
 
-import com.tms.mcq.framework.exception.ErrorCode;
-import com.tms.mcq.framework.exception.EventPublishException;
+import com.tms.mcq.framework.exception.EventHandlingException;
+import com.tms.mcq.framework.exception.GenericErrorCode;
+import com.tms.mcq.framework.exception.TMSException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -26,7 +28,12 @@ public class KafkaDistributedEventGateway implements EventGateway {
             });
         } catch (Throwable throwable){
             log.error(throwable);
-            throw new EventPublishException("Error while publish events");
+            throw new EventHandlingException(GenericErrorCode.GEN_10001,"Error while publish exception",throwable.getMessage(),true);
         }
+    }
+
+    @Override
+    public void publish(DomainEvent domainEvent) {
+        this.publish(Collections.singletonList(domainEvent));
     }
 }

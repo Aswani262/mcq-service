@@ -20,7 +20,11 @@ public class TMSException extends RuntimeException {
    private boolean isRecoverable;
    private String causeInfo;
 
-   protected TMSException(String message){
+   public TMSException(String message){
+      super(message);
+   }
+
+   public TMSException(ErrorCode code,String message,String causeInfo){
       super(message);
    }
 }
