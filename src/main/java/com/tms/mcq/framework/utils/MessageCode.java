@@ -9,7 +9,7 @@ public enum MessageCode {
 
     private String defaultMessage;
 
-    private MessageCode(String defaultMessage){
+    private MessageCode(String defaultMessage) {
         this.defaultMessage = defaultMessage;
     }
 }

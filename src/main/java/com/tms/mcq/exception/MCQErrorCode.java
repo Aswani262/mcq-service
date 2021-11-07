@@ -20,13 +20,17 @@ public enum MCQErrorCode implements ErrorCode {
     MCQ_10013(HttpStatus.PRECONDITION_FAILED),
     MCQ_10014(HttpStatus.PRECONDITION_FAILED),
     MCQ_10015(HttpStatus.PRECONDITION_FAILED),
+    MCQ_10016(HttpStatus.PRECONDITION_FAILED),
+    MCQ_10017(HttpStatus.PRECONDITION_FAILED),
+
     //Business  Validation - Start with 2
     MCQ_20001(HttpStatus.NOT_FOUND),
     MCQ_20002(HttpStatus.NOT_FOUND),
     MCQ_20003(HttpStatus.NOT_FOUND);
 
     HttpStatus httpStatus;
-    private MCQErrorCode(HttpStatus status){
+
+    private MCQErrorCode(HttpStatus status) {
         this.httpStatus = status;
     }
 

@@ -1,6 +1,5 @@
 package com.tms.mcq.framework.eventhandling;
 
-import com.tms.mcq.framework.annotation.CommandHandler;
 import com.tms.mcq.framework.commandhandling.Command;
 import lombok.Getter;
 import org.apache.commons.text.WordUtils;
@@ -18,29 +17,29 @@ import java.util.*;
 @Getter
 public class LocalEventRegistry {
 
-    Map<Class<?>, List<Map<String,String>>> providerMap = new HashMap<>();
+    Map<Class<?>, List<Map<String, String>>> providerMap = new HashMap<>();
 
     @Autowired
-    public LocalEventRegistry(ApplicationContext applicationContext){
+    public LocalEventRegistry(ApplicationContext applicationContext) {
         Reflections reflections = new Reflections(new ConfigurationBuilder().forPackages("com.tms.mcq").addScanners(Scanners.MethodsAnnotated));
         Set<Method> methodSet = reflections.getMethodsAnnotatedWith(EventHandler.class);
 
-        for(Method method:methodSet){
+        for (Method method : methodSet) {
             Class<?> parameterType = method.getParameterTypes()[0];
             Class<?> declaringClass = method.getDeclaringClass();
             String className = declaringClass.getSimpleName();
             String beanName = WordUtils.uncapitalize(className);
             String methodName = method.getName();
 
-            HashMap<String,String> methodAndBean = new HashMap<>(2);
-            methodAndBean.put("beanName",beanName);
-            methodAndBean.put("methodName",methodName);
-            if(providerMap.containsKey(parameterType)){
+            HashMap<String, String> methodAndBean = new HashMap<>(2);
+            methodAndBean.put("beanName", beanName);
+            methodAndBean.put("methodName", methodName);
+            if (providerMap.containsKey(parameterType)) {
                 providerMap.get(parameterType).add(methodAndBean);
             } else {
-                List<Map<String,String>> receptentList = new ArrayList<>();
+                List<Map<String, String>> receptentList = new ArrayList<>();
                 receptentList.add(methodAndBean);
-                providerMap.put(parameterType,receptentList);
+                providerMap.put(parameterType, receptentList);
             }
         }
     }

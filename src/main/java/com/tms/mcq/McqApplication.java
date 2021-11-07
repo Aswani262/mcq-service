@@ -8,8 +8,8 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class McqApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(McqApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(McqApplication.class, args);
+    }
 
 }

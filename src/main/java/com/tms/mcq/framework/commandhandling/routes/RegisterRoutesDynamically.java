@@ -24,9 +24,9 @@ public class RegisterRoutesDynamically implements ApplicationContextAware {
     @SneakyThrows
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        for(Map.Entry<Class<?>,Map<String,String>> handler:registry.getProviderMap().entrySet()){
-            Map<String,String> beanAndMethod = handler.getValue();
-            camelContext.addRoutes(new CommandRoutes(camelContext,handler.getKey().getSimpleName(),beanAndMethod.get("beanName"),beanAndMethod.get("methodName")));
+        for (Map.Entry<Class<?>, Map<String, String>> handler : registry.getProviderMap().entrySet()) {
+            Map<String, String> beanAndMethod = handler.getValue();
+            camelContext.addRoutes(new CommandRoutes(camelContext, handler.getKey().getSimpleName(), beanAndMethod.get("beanName"), beanAndMethod.get("methodName")));
         }
     }
 }

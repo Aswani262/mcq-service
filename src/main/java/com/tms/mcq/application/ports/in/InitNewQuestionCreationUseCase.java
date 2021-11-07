@@ -3,8 +3,6 @@ package com.tms.mcq.application.ports.in;
 import com.tms.mcq.application.ports.in.commands.InitNewMCQCmd;
 import com.tms.mcq.framework.dto.ServiceResult;
 
-import java.util.Map;
-
 public interface InitNewQuestionCreationUseCase {
     //We have to identied service result and use case result data and service
     // at present my thinking is like use is full fill by some service. so it ok to return service result

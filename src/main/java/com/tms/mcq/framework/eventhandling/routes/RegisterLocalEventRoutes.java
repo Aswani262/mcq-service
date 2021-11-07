@@ -23,22 +23,22 @@ public class RegisterLocalEventRoutes implements ApplicationContextAware {
     @Autowired
     LocalEventRegistry eventRegistry;
 
-   // final String kafkaEventTopic= "mcq-cmd-domain-event";//get list of interested topic its want to listen
+    // final String kafkaEventTopic= "mcq-cmd-domain-event";//get list of interested topic its want to listen
 
     @SneakyThrows
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
-        for(Map.Entry<Class<?>, List<Map<String,String>>> handler:eventRegistry.getProviderMap().entrySet()){
+        for (Map.Entry<Class<?>, List<Map<String, String>>> handler : eventRegistry.getProviderMap().entrySet()) {
 
             String eventName = handler.getKey().getSimpleName();
-            ArrayList<String> receptentList= new ArrayList<>();
-            for(Map<String,String> beanAndMethod :handler.getValue()){
-                String receptent = "bean:"+beanAndMethod.get("beanName")+"?method="+beanAndMethod.get("methodName");
+            ArrayList<String> receptentList = new ArrayList<>();
+            for (Map<String, String> beanAndMethod : handler.getValue()) {
+                String receptent = "bean:" + beanAndMethod.get("beanName") + "?method=" + beanAndMethod.get("methodName");
                 receptentList.add(receptent);
             }
-            String receptedListAsString = StringUtils.join(receptentList,",");
-            camelContext.addRoutes(new LocalEventRoutes(eventName,receptedListAsString,handler.getKey()));
+            String receptedListAsString = StringUtils.join(receptentList, ",");
+            camelContext.addRoutes(new LocalEventRoutes(eventName, receptedListAsString, handler.getKey()));
         }
     }
 }

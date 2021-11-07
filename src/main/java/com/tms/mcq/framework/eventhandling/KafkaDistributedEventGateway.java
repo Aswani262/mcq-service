@@ -2,7 +2,6 @@ package com.tms.mcq.framework.eventhandling;
 
 import com.tms.mcq.framework.exception.EventHandlingException;
 import com.tms.mcq.framework.exception.GenericErrorCode;
-import com.tms.mcq.framework.exception.TMSException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.stereotype.Component;
@@ -16,9 +15,10 @@ public class KafkaDistributedEventGateway implements EventGateway {
 
     ProducerTemplate producerTemplate;
 
-    KafkaDistributedEventGateway(ProducerTemplate template){
+    KafkaDistributedEventGateway(ProducerTemplate template) {
         this.producerTemplate = template;
     }
+
     @Override
     public void publish(List<DomainEvent> domainEvents) {
         try {
@@ -26,9 +26,9 @@ public class KafkaDistributedEventGateway implements EventGateway {
                 String eventName = domainEvent.getClass().getSimpleName();
                 producerTemplate.sendBodyAndHeader("kafka:mcq-cmd-domain-event?brokers=localhost:29092", domainEvent, "eventName", eventName);
             });
-        } catch (Throwable throwable){
+        } catch (Throwable throwable) {
             log.error(throwable);
-            throw new EventHandlingException(GenericErrorCode.GEN_10001,"Error while publish exception",throwable.getMessage(),true);
+            throw new EventHandlingException(GenericErrorCode.GEN_10001, "Error while publish exception", throwable.getMessage(), true);
         }
     }
 

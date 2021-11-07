@@ -8,6 +8,7 @@ public interface HintUseCase {
     /**
      * Add hint in MCQ if SeqId not present
      * Update if SeqId present.
+     *
      * @param cmd
      * @return
      */

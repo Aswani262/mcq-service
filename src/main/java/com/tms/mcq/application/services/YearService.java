@@ -14,7 +14,7 @@ public class YearService implements YearUseCase {
 
     MCQRepository repository;
 
-    public YearService(MCQRepository repository){
+    public YearService(MCQRepository repository) {
         this.repository = repository;
     }
 
@@ -22,9 +22,9 @@ public class YearService implements YearUseCase {
     @CommandHandler
     @Transactional
     public ServiceResult upsertYear(UpsertYearCmd cmd) {
-       MCQ mcq = repository.findById(cmd.getMcqId()).get();
+        MCQ mcq = repository.findById(cmd.getMcqId()).get();
 
-       mcq.addOrUpdateYear(cmd.getYear());
+        mcq.assignYearInAsked(cmd.getYear());
 
         return null;
     }

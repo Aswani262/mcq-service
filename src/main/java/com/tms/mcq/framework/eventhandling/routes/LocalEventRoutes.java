@@ -9,7 +9,7 @@ public class LocalEventRoutes extends RouteBuilder {
     private String receptedList;
     private Class<?> conveter;
 
-    public LocalEventRoutes(String sedaName,String receptedList,Class<?> conveter){
+    public LocalEventRoutes(String sedaName, String receptedList, Class<?> conveter) {
         this.sedaName = sedaName;
         this.receptedList = receptedList;
         this.conveter = conveter;
@@ -17,6 +17,6 @@ public class LocalEventRoutes extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        from("seda:"+sedaName).convertBodyTo(conveter).recipientList(constant(receptedList)).parallelProcessing().end();
+        from("seda:" + sedaName).convertBodyTo(conveter).recipientList(constant(receptedList)).parallelProcessing().end();
     }
 }

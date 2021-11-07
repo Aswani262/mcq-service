@@ -6,16 +6,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * It listen for external event of orther microservice which is its interested
- *
  */
 @Component
 public class ExternalEventListener {
 
     @EventHandler
-    public void handleMCQInit(MCQInitiated mcqInisited){
-      System.out.println(mcqInisited);
-   }
-
+    public void handleMCQInit(MCQInitiated mcqInisited) {
+        System.out.println(mcqInisited);
+    }
 
 
 }

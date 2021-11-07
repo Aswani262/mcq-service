@@ -1,11 +1,8 @@
 package com.tms.mcq.adaptors.out.outboundservice.masterdata;
 
-import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetMasterData;
-import com.tms.mcq.adaptors.out.outboundservice.masterdata.cmd.GetSubjectById;
 import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.MasterData;
 import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.Subject;
 import com.tms.mcq.adaptors.out.outboundservice.masterdata.model.Topic;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
@@ -15,7 +12,6 @@ import java.util.Set;
 public class MasterDataRepo {
 //    @Autowired
 //    WebClient webClient;
-
 
 
     public MasterData findAllMasterData() {

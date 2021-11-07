@@ -1,11 +1,9 @@
 package com.tms.mcq.framework.apiclient;
 
-import org.springframework.web.reactive.function.client.WebClient;
-
 import java.util.Map;
 
 
-public class GenericAPIClient<R,D> implements APIClient<R,D>{
+public class GenericAPIClient<R, D> implements APIClient<R, D> {
 
 
 //    WebClient webClient;
@@ -15,15 +13,13 @@ public class GenericAPIClient<R,D> implements APIClient<R,D>{
 //    }
 
 
-
-
     @Override
-    public R post(String url, D data, Map<String,Object> headers,int timeout) {
+    public R post(String url, D data, Map<String, Object> headers, int timeout) {
         return null;
     }
 
     @Override
-    public R get(String url, D data, Map<String,Object> headers,int timeout) {
+    public R get(String url, D data, Map<String, Object> headers, int timeout) {
         return null;
     }
 }

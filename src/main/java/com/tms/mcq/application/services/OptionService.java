@@ -18,7 +18,7 @@ public class OptionService implements OptionUseCase {
 
     MCQRepository repository;
 
-    public OptionService(MCQRepository repository){
+    public OptionService(MCQRepository repository) {
         this.repository = repository;
     }
 
@@ -29,12 +29,17 @@ public class OptionService implements OptionUseCase {
     public ServiceResult upsertOption(UpsertOptionCmd cmd) {
         ServiceResult result = new ServiceResult();
         MCQ mcq = repository.findById(cmd.getMcqId()).get();
-        if(mcq == null){
-            throw new MCQException(MCQErrorCode.MCQ_20003,"MCQ Id is need to update or create option","Provided MCQ ID not found in system");
+        if (mcq == null) {
+            throw new MCQException(MCQErrorCode.MCQ_20003, "MCQ Id is need to update or create option", "Provided MCQ ID not found in system");
         }
-        mcq.addOrUpdate(Option.of(cmd.getSeqId(),cmd.getOptionText(),cmd.isAns()));
+        final Option option = Option.of(cmd.getSeqId(), cmd.getOptionText(), cmd.isAns());
+        if (mcq.isOptionExist(option)) {
+            mcq.updateOption(option);
+        } else {
+            mcq.addOption(option);
+        }
         repository.store(mcq);
-        result.addData(ResponseKey.message,"Option is updated or added");
+        result.addData(ResponseKey.message, "Option is updated or added");
         return result;
     }
 }

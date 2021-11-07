@@ -2,9 +2,9 @@ package com.tms.mcq.adaptors.in.restapi;
 
 import com.tms.mcq.adaptors.in.restapi.req.UpsertQuestionTextReq;
 import com.tms.mcq.application.ports.in.commands.AddOrUpdateQuestionTextCmd;
-import com.tms.mcq.framework.dto.RestResponse;
 import com.tms.mcq.framework.commandhandling.CommandGateway;
 import com.tms.mcq.framework.commandhandling.CommandResult;
+import com.tms.mcq.framework.dto.RestResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +26,12 @@ public class QuestionTextController {
 
     CommandGateway commandGateway;
 
-    public QuestionTextController(CommandGateway gateway){
+    public QuestionTextController(CommandGateway gateway) {
         this.commandGateway = gateway;
     }
 
     @PutMapping("upsert/{mcqId}/questionText")
-    public CompletableFuture<ResponseEntity<RestResponse>> upsertQuestionText(@PathVariable("mcqId")String mcqId ,@RequestBody UpsertQuestionTextReq request)  {
+    public CompletableFuture<ResponseEntity<RestResponse>> upsertQuestionText(@PathVariable("mcqId") String mcqId, @RequestBody UpsertQuestionTextReq request) {
         AddOrUpdateQuestionTextCmd cmd = AddOrUpdateQuestionTextCmd.from(mcqId, request.getQuestionText());
         CompletableFuture<CommandResult> completableFuture = commandGateway.sendAndReceiveAsync(cmd);
         return completableFuture.thenApplyAsync(cmdResult -> new ResponseEntity<>(new RestResponse(cmdResult), HttpStatus.ACCEPTED));

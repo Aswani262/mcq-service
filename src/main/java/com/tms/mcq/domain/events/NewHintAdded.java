@@ -1,24 +1,19 @@
 package com.tms.mcq.domain.events;
 
-import com.tms.mcq.framework.eventhandling.DomainEvent;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter
-public class NewHintAdded extends MCQDomainEvent{
+public class NewHintAdded extends MCQUpdated {
     private String mcqId;
-    private int seqId;
     private String hintText;
 
-    private NewHintAdded(String mcqId,int seqId,String hintText){
+    private NewHintAdded(String mcqId, String hintText) {
         this.mcqId = mcqId;
-        this.seqId = seqId;
         this.hintText = hintText;
     }
 
-
-    public static NewHintAdded of(String mcqId, int seqId, String hintText) {
-        NewHintAdded evt = new NewHintAdded(mcqId,seqId,hintText);
+    public static NewHintAdded of(String mcqId, String hintText) {
+        NewHintAdded evt = new NewHintAdded(mcqId, hintText);
         return evt;
     }
 }

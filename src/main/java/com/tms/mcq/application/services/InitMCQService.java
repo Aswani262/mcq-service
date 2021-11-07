@@ -10,8 +10,8 @@ import com.tms.mcq.domain.model.MCQFactory;
 import com.tms.mcq.domain.services.GenerateUniqueId;
 import com.tms.mcq.exception.MCQErrorCode;
 import com.tms.mcq.exception.MCQException;
-import com.tms.mcq.framework.annotation.UseCaseService;
 import com.tms.mcq.framework.annotation.CommandHandler;
+import com.tms.mcq.framework.annotation.UseCaseService;
 import com.tms.mcq.framework.commandhandling.CommandGateway;
 import com.tms.mcq.framework.commandhandling.CommandResult;
 import com.tms.mcq.framework.dto.ServiceResult;
@@ -21,8 +21,6 @@ import com.tms.mcq.framework.utils.ResponseKey;
 import com.tms.mcq.framework.utils.ServiceUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @UseCaseService //or application service
 @Log4j2
@@ -43,16 +41,18 @@ public class InitMCQService implements InitNewQuestionCreationUseCase {
     EventGateway eventGateway;
     CommandGateway commandGateway;
 
-    public InitMCQService(MCQRepository mcqRepository,GenerateUniqueId generateUniqueId,EventGateway eventGateway,CommandGateway commandGateway){
+    public InitMCQService(MCQRepository mcqRepository, GenerateUniqueId generateUniqueId, EventGateway eventGateway, CommandGateway commandGateway) {
         this.mcqRepository = mcqRepository;
         this.generateUniqueId = generateUniqueId;
         this.eventGateway = eventGateway;
         this.commandGateway = commandGateway;
     }
     // Write an aop to log all the exception and convert into MCQ Exception
+
     /**
      * It will assign a insisiate new MCQ creation in system
      * It will throw runtime MCQInitException
+     *
      * @param cmd
      * @return
      */
@@ -69,7 +69,7 @@ public class InitMCQService implements InitNewQuestionCreationUseCase {
             result.addData(ResponseKey.mcqId, mcqId);
             result.addData(ResponseKey.message, MessageCode.MCQ_10003);
             eventGateway.publish(mcq.getEvents());
-        } catch (Throwable throwable){// TODO: Use aop to handle exception - at time of handling log request and response
+        } catch (Throwable throwable) {// TODO: Use aop to handle exception - at time of handling log request and response
             ServiceUtils.handleException(throwable);
         }
         return result;
@@ -80,10 +80,10 @@ public class InitMCQService implements InitNewQuestionCreationUseCase {
         getMasterData.setSubjectCode(cmd.getSubjectId());
 
         CommandResult commandResult = commandGateway.sendAndReceive(getMasterData);
-        MasterData masterData = (MasterData)commandResult.getData().get("masterData");
+        MasterData masterData = (MasterData) commandResult.getData().get("masterData");
 
-        if(!masterData.getSubject().contains(cmd.getSubjectId())){
-           throw new MCQException(MCQErrorCode.MCQ_10002,"Invalid subject code","Subject code not exist in system");
+        if (!masterData.getSubject().contains(cmd.getSubjectId())) {
+            throw new MCQException(MCQErrorCode.MCQ_10002, "Invalid subject code", "Subject code not exist in system");
         }
     }
 

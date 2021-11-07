@@ -1,8 +1,6 @@
 package com.tms.mcq.adaptors.in.restapi;
 
 import com.tms.mcq.adaptors.in.restapi.req.OptionUpsertReq;
-import com.tms.mcq.adaptors.in.restapi.req.UpsertQuestionTextReq;
-import com.tms.mcq.application.ports.in.commands.AddOrUpdateQuestionTextCmd;
 import com.tms.mcq.application.ports.in.commands.UpsertOptionCmd;
 import com.tms.mcq.framework.commandhandling.CommandGateway;
 import com.tms.mcq.framework.commandhandling.CommandResult;
@@ -19,13 +17,13 @@ public class OptionController {
 
     CommandGateway commandGateway;
 
-    public OptionController(CommandGateway commandGateway){
+    public OptionController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
     @PutMapping("upsert/{mcqId}/option")
-    public CompletableFuture<ResponseEntity<RestResponse>> upsertOption(@PathVariable("mcqId")String mcqId , @RequestBody OptionUpsertReq request)  {
-        UpsertOptionCmd cmd = UpsertOptionCmd.from(mcqId,request);
+    public CompletableFuture<ResponseEntity<RestResponse>> upsertOption(@PathVariable("mcqId") String mcqId, @RequestBody OptionUpsertReq request) {
+        UpsertOptionCmd cmd = UpsertOptionCmd.from(mcqId, request);
         CompletableFuture<CommandResult> completableFuture = commandGateway.sendAndReceiveAsync(cmd);
         return completableFuture.thenApplyAsync(cmdResult -> new ResponseEntity<>(new RestResponse(cmdResult), HttpStatus.ACCEPTED));
     }

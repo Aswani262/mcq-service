@@ -1,10 +1,8 @@
 package com.tms.mcq.framework.eventhandling.routes;
 
-import com.tms.mcq.framework.eventhandling.EventHandler;
 import com.tms.mcq.framework.eventhandling.KafkaEventRegistry;
 import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -26,7 +24,7 @@ public class RegisterKafkaEventRoutes implements ApplicationContextAware {
     @SneakyThrows
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        for(Map.Entry<String, List<String>> topics:kafkaEventRegistry.getProviderMap().entrySet()){
+        for (Map.Entry<String, List<String>> topics : kafkaEventRegistry.getProviderMap().entrySet()) {
             camelContext.addRoutes(new KafkaEventsRoutes(topics.getKey()));
         }
     }
