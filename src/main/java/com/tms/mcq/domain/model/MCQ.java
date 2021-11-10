@@ -11,20 +11,23 @@ import java.util.Set;
 
 @Getter
 @NoArgsConstructor
-@Setter(AccessLevel.PROTECTED)//No one able to access setter to change the property , to
+@Setter(AccessLevel.PROTECTED)//No one able to access setter to change the property.
 // Get a new Object using the Aggregate factory class , MCQFactory
 public class MCQ extends AggregatesRoot {
-    private String mcqId;
+    private String mcqId; // MCQ Id is business key to identify MCQ in business , it is not DB key. Once the MCQ Id is
+    //create it cannot be changed , and subject it assigned cannot be changed.
     private String questionText;
     private Set<Option> options;
     private String hint;
-    private Set<String> yearsInAsked;
-    private Set<TopicRef> topicIds; // Available globally
+    private Set<String> yearsInAsked;// Valid year will handle from UI
+    private Set<TopicRef> topicIds; // Same as label
+    //Aggregate Id of subject , as only sharing Id of aggregate between bounded context
     private SubjectRef subjectId; // Available globally
-    private Set<LabelRef> labelIds; // label will be available globally
+    private Set<LabelRef> labelIds; // Label assign first to question , after it will be added to master data using event mechanism- making system eventually consistence
     private Status status;
 
-    //Just use by persistence framework for instantiation, don't put any kind of validation logic
+    //Just use by persistence framework - As saving domain model in persistence directly , not using any kind of persistence model
+    //Don't put any kind of validation logic here , that will fail the persistence framework.
     public MCQ(String mcqId, String questionText, Set<Option> options, String hint, Set<String> yearsInAsked, Set<TopicRef> topicIds, SubjectRef subjectId, Set<LabelRef> labelIds, Status status) {
         this.mcqId = mcqId;
         this.questionText = questionText;
@@ -43,7 +46,7 @@ public class MCQ extends AggregatesRoot {
      * In case of empty of null case - considered as removing of
      * hint from MCQ
      *
-     * @param hint
+     * @param hint Hint to add in MCQ
      */
     public void addOrUpdateHint(final String hint) {
         //Hint considered as value object so always replace with new hint
@@ -61,7 +64,7 @@ public class MCQ extends AggregatesRoot {
      * In case of empty of null case - considered as removing of
      * question from MCQ
      *
-     * @param questionText
+     * @param questionText QuestionText to add MCQ
      */
     public void addOrUpdateQuestionText(final String questionText) {
         if (this.questionText == null || this.questionText.isEmpty()) {
@@ -72,15 +75,26 @@ public class MCQ extends AggregatesRoot {
         this.questionText = questionText;
     }
 
-    public void addOption(final Option option) {
+    /**
+     * Add new option using seqId
+     * @param option Option to Add in MCQ
+     * @return boolean true if added , false if not added
+     */
+    public boolean addOption(final Option option) {
         //Option is always treat as value object , always replace
         if (this.options == null || this.options.isEmpty()) {
             this.options = new HashSet<>();
         }
         addEvent(NewOptionAdded.of(mcqId, option.getSeqId(), option.getOptionText(), option.isAns()));
-        this.options.add(option);
+        return this.options.add(option);
     }
 
+    /**
+     * Return true is option exist , otherwise false
+     * Uniqueness in based on seqId of option
+     * @param option
+     * @return
+     */
     public boolean isOptionExist(final Option option) {
         if (this.options == null || this.options.isEmpty()) {
             return false;
@@ -88,6 +102,14 @@ public class MCQ extends AggregatesRoot {
         return this.options.contains(option);
     }
 
+    /**
+     * Return true if updated , otherwise false.
+     * Update only if option is present in list.
+     * Uniqueness check on seqId of Option.
+     * Here option is replace with old one case of update.
+     * @param option
+     * @return
+     */
     public boolean updateOption(final Option option) {
         if (this.options.remove(option)) {
             //Replace option with new one in case of update
