@@ -1,38 +1,35 @@
 package com.tms.mcq.exception;
 
-import com.tms.mcq.framework.exception.ErrorCode;
-import org.springframework.http.HttpStatus;
+import com.tms.framework.exception.ErrorCode;
 
 public enum MCQErrorCode implements ErrorCode {
-    //Command Validation - Start with 1
-    MCQ_10001(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10002(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10003(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10004(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10005(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10006(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10007(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10008(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10009(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10010(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10011(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10012(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10013(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10014(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10015(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10016(HttpStatus.PRECONDITION_FAILED),
-    MCQ_10017(HttpStatus.PRECONDITION_FAILED),
+    //Command Validation - Start with 1 - Request Validation
+    MCQ_10_001,
+    MCQ_10_002,
+    MCQ_10_003,
+    MCQ_10_004,
+    MCQ_10_005,
+    MCQ_10_006,
+    MCQ_10_007,
+    MCQ_10_008,
+    MCQ_10_009,
+    MCQ_10_010,
+    MCQ_10_011,
+    MCQ_10_012,
+    MCQ_10_013,
+    MCQ_10_014,
+    MCQ_10_015,
+    MCQ_10_016,
+    MCQ_10_017,
 
-    //Business  Validation - Start with 2
-    MCQ_20001(HttpStatus.NOT_FOUND),
-    MCQ_20002(HttpStatus.NOT_FOUND),
-    MCQ_20003(HttpStatus.NOT_FOUND);
+    //Business Validation - Start with 2
+    MCQ_20_001,
+    MCQ_20_002,
+    MCQ_20_003,
+    MCQ_500;
 
-    HttpStatus httpStatus;
 
-    private MCQErrorCode(HttpStatus status) {
-        this.httpStatus = status;
-    }
+
 
 
 }
